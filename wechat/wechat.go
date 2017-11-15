@@ -52,3 +52,7 @@ func (c *common) Post(m WePayer) ([]byte, error) {
 		b,
 	)
 }
+
+func (c *common) CheckSign() error {
+	return nil
+}
