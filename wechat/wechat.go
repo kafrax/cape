@@ -1,9 +1,10 @@
 package wechat
 
 import (
-	"reflect"
-	"github.com/kafrax/chaos"
 	"encoding/xml"
+	"reflect"
+
+	"github.com/kafrax/chaos"
 	"github.com/kafrax/netask"
 )
 

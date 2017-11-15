@@ -12,7 +12,6 @@ type AppPay struct {
 	SpbillCreateIp string            `json:"spbill_create_ip"`
 	TotalFee       string            `json:"total_fee"`
 	OutTradeNo     string            `json:"out_trade_no"`
-	//Sign           string            `json:"sign" json:"sign"`
 	Attach         string            `json:"attach" json:"attach"`
 	Data           map[string]string `json:"-"`
 }

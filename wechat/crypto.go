@@ -1,12 +1,13 @@
 package wechat
 
 import (
-	"sort"
-	"fmt"
 	"crypto/md5"
-	"github.com/kafrax/chaos"
-	"strings"
 	"encoding/hex"
+	"fmt"
+	"sort"
+	"strings"
+
+	"github.com/kafrax/chaos"
 )
 
 func checkSign(msg map[string]interface{}, key, sign string) bool {
