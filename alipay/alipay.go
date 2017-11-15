@@ -10,8 +10,10 @@ import (
 type AliApi = string
 
 const (
-	AliApiPay   AliApi = "alipay.trade.app.pay"
-	AliApiQuery AliApi = "alipay.trade.query"
+	AliApiPay           AliApi = "alipay.trade.app.pay"
+	AliApiQuery         AliApi = "alipay.trade.query"
+	AliApiTransfer      AliApi = "alipay.fund.trans.toaccount.transfer"
+	AliApiTransferQuery AliApi = "alipay.fund.trans.order.query"
 )
 
 type config struct {
