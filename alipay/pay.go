@@ -6,7 +6,7 @@ import (
 )
 
 //https://docs.open.alipay.com/204/105465/
-
+//app pay method
 type AppPay struct {
 	NotifyUrl      string `json:"-"`
 	Body           string `json:"body"`

@@ -5,8 +5,11 @@ import (
 	"time"
 	"sort"
 	"github.com/kafrax/chaos"
+	"github.com/kafrax/netask"
+	"encoding/json"
 )
 
+//todo Detecting the error of return system to avoid repeated payment
 type AliApi = string
 
 const (
@@ -16,22 +19,22 @@ const (
 	AliApiTransferQuery AliApi = "alipay.fund.trans.order.query"
 )
 
-type config struct {
-	domain     string
+type common struct {
 	AppId      string
-	privateKey string
+	PrivateKey string
+	PublicKey  string
+	domain     string
 	format     string
 	charset    string
 	signType   string
-	publicKey  string
 	version    string
 	values     *url.Values
 }
 
-var AliPay *config
+var AliPay *common
 
 func init() {
-	AliPay = &config{
+	AliPay = &common{
 		domain:   "https://openapi.alipay.com/gateway.do",
 		format:   "JSON",
 		charset:  "uft-8",
@@ -43,7 +46,7 @@ func init() {
 // user demo:
 // alipay/Alipay.AppId="12345678"
 // Alipay.UrlValuesEncode(AliPayer)
-func (c *config) UrlValuesEncode(a AliPayer) (string, error) {
+func (c *common) UrlValuesEncode(a AliPayer) string {
 	u := &url.Values{}
 	u.Add("app_id", c.AppId)
 	u.Add("method", a.ChooseApi())
@@ -60,12 +63,12 @@ func (c *config) UrlValuesEncode(a AliPayer) (string, error) {
 			u.Add(key, value)
 		}
 	}
-	sig, err := SignRsa2(allKeys(u), u, chaos.String2Byte(c.privateKey))
+	sig, err := SignRsa2(allKeys(u), u, chaos.String2Byte(c.PrivateKey))
 	if err != nil {
-		return "", err
+		return ""
 	}
 	u.Add("sign", sig)
-	return u.Encode(), nil
+	return u.Encode()
 }
 
 func allKeys(u *url.Values) (ret []string) {
@@ -73,5 +76,22 @@ func allKeys(u *url.Values) (ret []string) {
 		ret = append(ret, k)
 	}
 	sort.Strings(ret)
+	return
+}
+
+//for http post
+func (c *common) Post(method string, obj AliPayer, result interface{}) (err error) {
+	resp, err := netask.Post(
+		c.domain,
+		"application/x-www-form-urlencoded;charset=utf-8",
+		false, chaos.String2Byte(c.UrlValuesEncode(obj)),
+	)
+	if err != nil {
+		return err
+	}
+	err = json.Unmarshal(resp, result)
+	if err != nil {
+		return err
+	}
 	return
 }
