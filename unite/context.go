@@ -17,7 +17,20 @@ type Endpoint func(ctx Context, requestBody interface{}) (ret interface{}, err E
 type Context struct {
 	handlers HandlerList
 	errors   Error
-	index    uint8 //now handlerFunc's index.
+	abortIndex    uint8 //now handlerFunc's index.
+	params   map[string]string
+}
+
+func (c *Context) Reset() {
+
+}
+
+func (c *Context) Clone() *Context {
+	var cp = *c
+	cp.handlers=nil
+	cp.errors=Error{}
+	cp.abortIndex=-1
+	return &cp
 }
 
 func (c *Context) Next() {
@@ -25,7 +38,7 @@ func (c *Context) Next() {
 }
 
 func (c *Context) Abort() {
-	c.index = abortIndex
+	c.abortIndex = abortIndex
 }
 
 func (c *Context) AbortWithErr(msg string, t ErrorType, err error) Error {
@@ -34,7 +47,7 @@ func (c *Context) AbortWithErr(msg string, t ErrorType, err error) Error {
 }
 
 func (c *Context) IsAbort() bool {
-	return c.index >= abortIndex
+	return c.abortIndex >= abortIndex
 }
 
 func (c *Context) LenHandler() int {
