@@ -1,6 +1,6 @@
 package unite
 
-type ErrorType uint64
+type ErrorType = uint64
 
 const (
 	ErrorServer ErrorType = 1 << 63
@@ -14,4 +14,8 @@ type Error struct {
 
 func (e *Error) Error() string {
 	return e.ErrMsg
+}
+
+func ErrorsNew(msg string, t ErrorType, err error) Error {
+	return Error{err, t, msg}
 }
