@@ -10,11 +10,11 @@ import (
 
 //todo Detecting the error of return system to avoid repeated payment
 
-type WechatApi = string
+type HostList = string
 
 const (
-	WechatApiUnifyOrder WechatApi = "https://api.mch.weixin.qq.com/pay/unifiedorder"
-	WechatApiTransfer   WechatApi = "https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers"
+	ApiUnifyOrder HostList = "https://api.mch.weixin.qq.com/pay/unifiedorder"
+	ApiTransfer   HostList = "https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers"
 )
 
 var Wehchat *common

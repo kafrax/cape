@@ -17,7 +17,7 @@ type AppPay struct {
 }
 
 func (*AppPay) ChooseHost() string {
-	return WechatApiUnifyOrder
+	return ApiUnifyOrder
 }
 
 func (a *AppPay) SetExtraParam(key, value string) {
