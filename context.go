@@ -6,20 +6,16 @@ const (
 	abortIndex uint8 = math.MaxUint8 / 2
 )
 
-type HandlerFunc func(context *Context)
-type HandlerList []HandlerFunc
-
-// Endpoint to add middleware what you want to do when pay channel action will doing before.
-// like secret,validator,insert order to db etc.
-type Endpoint func(ctx Context, requestBody interface{}) (ret interface{}, err Error)
-type Middleware func(endpoint Endpoint)Endpoint
+// when done papyrus action,do next like update order
+type NextFunc func(context *Context)
+type NextList []NextFunc
 
 // Context is all of the pay channel to use for execute operation like pay or transfer etc.
 type Context struct {
-	handlers HandlerList
-	errors   Error
-	abortIndex    uint8 //now handlerFunc's index.
-	params   map[string]string
+	next       NextList
+	errors     Error
+	abortIndex uint8 //now handlerFunc's index.
+	params     map[string]string
 }
 
 func (c *Context) Reset() {
@@ -28,9 +24,9 @@ func (c *Context) Reset() {
 
 func (c *Context) Clone() *Context {
 	var cp = *c
-	cp.handlers=nil
-	cp.errors=Error{}
-	cp.abortIndex=-1
+	cp.next = nil
+	cp.errors = Error{}
+	cp.abortIndex = -1
 	return &cp
 }
 
@@ -51,8 +47,8 @@ func (c *Context) IsAbort() bool {
 	return c.abortIndex >= abortIndex
 }
 
-func (c *Context) LenHandler() int {
-	return len(c.handlers)
+func (c *Context) NextLen() int {
+	return len(c.next)
 }
 
 //set other param for action
