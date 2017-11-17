@@ -1,4 +1,4 @@
-package cape
+package payrus
 
 type Charges interface {
 
