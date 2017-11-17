@@ -1,7 +1,10 @@
 package unite
 
+type ChargeRequest struct {
+}
+
 //for pay
-type Charge struct {
+type ChargeResponse struct {
 	ID           string `json:"id"`
 	Object       string `json:"object"`
 	Created      int    `json:"created"`
