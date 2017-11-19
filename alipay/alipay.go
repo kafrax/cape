@@ -8,6 +8,7 @@ import (
 
 	"github.com/kafrax/chaos"
 	"github.com/kafrax/netask"
+	"github.com/kafrax/cape/unite"
 )
 
 //todo Detecting the error of return system to avoid repeated payment
@@ -20,10 +21,10 @@ const (
 	AliApiTransferQuery AliApi = "alipay.fund.trans.order.query"
 )
 
-type common struct {
+type Alipay struct {
 	AppId      string
-	PrivateKey string
-	PublicKey  string
+	privateKey string
+	publicKey  string
 	domain     string
 	format     string
 	charset    string
@@ -32,22 +33,23 @@ type common struct {
 	values     *url.Values
 }
 
-var AliPay *common
-
-func init() {
-	AliPay = &common{
-		domain:   "https://openapi.alipay.com/gateway.do",
-		format:   "JSON",
-		charset:  "uft-8",
-		signType: "RSA2",
-		version:  "1.0",
+func New(pap *unite.Papyrus) *Alipay {
+	return &Alipay{
+		domain:     "https://openapi.alipay.com/gateway.do",
+		format:     "JSON",
+		charset:    "uft-8",
+		signType:   "RSA2",
+		version:    "1.0",
+		privateKey: pap.PrivateKey,
+		publicKey:  pap.PublicKey,
+		AppId:      pap.AppID,
 	}
 }
 
 // user demo:
 // alipay/Alipay.AppId="12345678"
 // Alipay.UrlValuesEncode(AliPayer)
-func (c *common) UrlValuesEncode(a AliPayer) string {
+func (c *Alipay) UrlValuesEncode(a AliPayer) string {
 	u := &url.Values{}
 	u.Add("app_id", c.AppId)
 	u.Add("method", a.ChooseApi())
@@ -64,7 +66,7 @@ func (c *common) UrlValuesEncode(a AliPayer) string {
 			u.Add(key, value)
 		}
 	}
-	sig, err := SignRsa2(allKeys(u), u, chaos.String2Byte(c.PrivateKey))
+	sig, err := SignRsa2(allKeys(u), u, chaos.String2Byte(c.privateKey))
 	if err != nil {
 		return ""
 	}
@@ -81,7 +83,7 @@ func allKeys(u *url.Values) (ret []string) {
 }
 
 //for http post
-func (c *common) Post(method string, obj AliPayer, result interface{}) (err error) {
+func (c *Alipay) Post(method string, obj AliPayer, result interface{}) (err error) {
 	resp, err := netask.Post(
 		c.domain,
 		"application/x-www-form-urlencoded;charset=utf-8",

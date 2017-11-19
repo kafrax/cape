@@ -1,6 +1,30 @@
 package unite
 
 type ChargeRequest struct {
+	OrderNo  string `json:"order_no"`
+	Channel  string `json:"channel"`
+	Amount   string `json:"amount"`
+	Currency string `json:"currency"`
+	ClientIP string `json:"client_ip"`
+	Subject  string `json:"subject"`
+	Body     string `json:"body"`
+}
+
+func (c *ChargeRequest)chooseAdapter()ChargeAdapter{
+	switch c.Channel {
+	case "alipay.app":
+	}
+}
+
+
+//convert ChargeRequest to ChargeResponse
+func New(request *ChargeRequest, pap *Papyrus) *ChargeResponse {
+	//chooseAdapter
+	//validator ChargeRequest is correct
+	//convert ChargeRequest to ChargeAdapter
+	//pay action
+	//convert ChargeAdapter to ChargeResponse
+
 }
 
 //for pay

@@ -8,5 +8,4 @@ type ChargeAdapter interface {
 }
 
 type TransferAdapter interface {
-	
 }

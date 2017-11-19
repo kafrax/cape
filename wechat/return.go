@@ -1,6 +1,5 @@
 package wechat
 
-
 type ReturnMsg struct {
 	ReturnCode string `xml:"return_code"`
 	ReturnMsg  string `xml:"return_msg"`

@@ -4,9 +4,10 @@ type IPapyrus interface {
 }
 
 type Papyrus struct {
-}
-
-// config payment object
-func (p *Papyrus)New(){
-
+	AppID      string
+	MchID      string
+	PrivateKey string
+	PublicKey  string
+	AppKey     string
+	AppSecret  string
 }
