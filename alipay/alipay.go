@@ -8,7 +8,8 @@ import (
 
 	"github.com/kafrax/chaos"
 	"github.com/kafrax/netask"
-	"github.com/kafrax/cape/unite"
+	"github.com/kafrax/papyrus/unite"
+	"github.com/kafrax/papyrus"
 )
 
 //todo Detecting the error of return system to avoid repeated payment
@@ -33,7 +34,10 @@ type Alipay struct {
 	values     *url.Values
 }
 
-func New(pap *unite.Papyrus) *Alipay {
+func New(pap *unite.Papyrus) (*Alipay, error) {
+	if chaos.IsAllNilString(pap.PrivateKey,pap.PublicKey,pap.AppID){
+		return nil,payrus.ErrorsNew("no PrivateKey or PublicKey or AppID",payrus.ErrorAlipayParams)
+	}
 	return &Alipay{
 		domain:     "https://openapi.alipay.com/gateway.do",
 		format:     "JSON",
@@ -43,7 +47,7 @@ func New(pap *unite.Papyrus) *Alipay {
 		privateKey: pap.PrivateKey,
 		publicKey:  pap.PublicKey,
 		AppId:      pap.AppID,
-	}
+	},nil
 }
 
 // user demo:

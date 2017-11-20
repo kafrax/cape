@@ -1,5 +1,10 @@
 package unite
 
+import (
+	"github.com/kafrax/papyrus"
+	"github.com/kafrax/papyrus/alipay"
+)
+
 type ChargeRequest struct {
 	OrderNo  string `json:"order_no"`
 	Channel  string `json:"channel"`
@@ -10,16 +15,40 @@ type ChargeRequest struct {
 	Body     string `json:"body"`
 }
 
-func (c *ChargeRequest)chooseAdapter()ChargeAdapter{
-	switch c.Channel {
+
+func chooseAdapter(c string,pap *Papyrus)(ChargeAdapter,error){
+	switch c {
 	case "alipay.app":
+		return alipay.New(pap)
 	}
+
+	return nil,payrus.ErrorsNew("no channel",payrus.ErrorChannel)
+}
+
+func (c *ChargeRequest) Validator(charge ChargeRequest) bool {
+	panic("implement me")
+}
+
+func (c *ChargeRequest) Convert2SP(charge ChargeRequest) ChargeAdapter {
+	panic("implement me")
+}
+
+func (c *ChargeRequest) Pay() {
+	panic("implement me")
+}
+
+func (c *ChargeRequest) Convert2C(ChargeAdapter) ChargeResponse {
+	panic("implement me")
 }
 
 
 //convert ChargeRequest to ChargeResponse
-func New(request *ChargeRequest, pap *Papyrus) *ChargeResponse {
+func New(request *ChargeRequest, pap *Papyrus) (c *ChargeResponse,err error) {
 	//chooseAdapter
+	ad,err:=chooseAdapter(request.Channel,pap)
+	if err != nil {
+
+	}
 	//validator ChargeRequest is correct
 	//convert ChargeRequest to ChargeAdapter
 	//pay action
